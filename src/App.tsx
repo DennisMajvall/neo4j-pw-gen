@@ -1,14 +1,15 @@
 import logo from "./logo.svg";
 import "./App.css";
+import { Button } from "@neo4j-ndl/react";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
+        <Button>
           Edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        </Button>
         <a
           className="App-link"
           href="https://reactjs.org"
