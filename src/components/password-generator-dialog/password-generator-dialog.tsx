@@ -1,13 +1,5 @@
-import {
-  Button,
-  Checkbox,
-  Dialog,
-  IconButton,
-  TextInput,
-  Tooltip,
-} from "@neo4j-ndl/react";
+import { Button, Checkbox, Dialog, TextInput } from "@neo4j-ndl/react";
 import { SliderWithLabel } from "../slider/slider-with-label";
-import { Square2StackIconOutline } from "@neo4j-ndl/react/icons";
 import { useCallback, useState } from "react";
 import {
   generateRandomPassword,
@@ -15,7 +7,7 @@ import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH,
 } from "../../services/password-generator";
-import { useCopyToClipboard } from "../../hooks/use-copy-to-clipboard";
+import { CopyToClipboardIcon } from "./copy-to-clipboard-icon";
 
 /*
   onClick & onChange triggers on spacebar, I'm not sure if that's what the criteria
@@ -31,8 +23,6 @@ export function PasswordGeneratorDialog() {
   const [includeSymbols, setIncludeSymbols] = useState(false);
   const [length, setLength] = useState(DEFAULT_LENGTH);
 
-  const [displayIsCopiedToClipboard, copyToClipboard] = useCopyToClipboard();
-
   const onGenerateClick = useCallback(() => {
     const newPassword = generateRandomPassword({
       includeUpperCase,
@@ -42,25 +32,6 @@ export function PasswordGeneratorDialog() {
     });
     setPassword(newPassword);
   }, [includeUpperCase, includeLowerCase, includeSymbols, length]);
-
-  const copyToClipboardElement = navigator.clipboard ? (
-    <Tooltip
-      type="simple"
-      isOpen={displayIsCopiedToClipboard}
-      isPortaled={false}
-    >
-      <Tooltip.Trigger hasButtonWrapper>
-        <IconButton
-          ariaLabel="Copy to clipboard"
-          onClick={() => copyToClipboard(password)}
-          isClean
-        >
-          <Square2StackIconOutline />
-        </IconButton>
-      </Tooltip.Trigger>
-      <Tooltip.Content>Copied to clipboard</Tooltip.Content>
-    </Tooltip>
-  ) : undefined;
 
   return (
     <Dialog isOpen hasDisabledCloseButton>
@@ -72,7 +43,7 @@ export function PasswordGeneratorDialog() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           isFluid
-          rightElement={copyToClipboardElement}
+          rightElement={<CopyToClipboardIcon password={password} />}
         />
 
         <SliderWithLabel
