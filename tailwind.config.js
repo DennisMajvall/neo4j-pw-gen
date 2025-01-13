@@ -1,7 +1,6 @@
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
   presets: [require("@neo4j-ndl/base").tailwindConfig],
-  prefix: "",
   corePlugins: {
     preflight: false,
   },
