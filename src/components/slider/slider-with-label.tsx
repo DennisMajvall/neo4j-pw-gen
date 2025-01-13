@@ -24,6 +24,7 @@ export function SliderWithLabel(props: Props) {
         <label htmlFor={sliderProps.id} className="n-subheading-medium">
           {text}
         </label>
+
         {displayCurrentValue && (
           <p className="n-subheading-medium">{currentValue}</p>
         )}

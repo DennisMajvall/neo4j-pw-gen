@@ -40,7 +40,8 @@ export function Slider(props: SliderProps) {
         "n-bg-primary-border-weak",
         "n-my-2",
         "n-rounded-xl",
-        "n-w-full"
+        "n-w-full",
+        isDisabled && "n-opacity-70" // TODO: use correct colors for "disabled", but time restrained
       )}
     >
       <div

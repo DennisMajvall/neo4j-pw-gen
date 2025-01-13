@@ -26,14 +26,17 @@ input[type="range"].neo4j-slider-css-input::-webkit-slider-thumb {
   background-color: rgb(var(--theme-palette-primary-bg-strong));
   border-radius: 50%;
   -webkit-appearance: none;
+}
+
+input[type="range"]:not([disabled]).neo4j-slider-css-input::-webkit-slider-thumb {
   cursor: pointer;
 }
 
-input[type="range"].neo4j-slider-css-input:focus::-webkit-slider-thumb {
+input[type="range"]:not([disabled]).neo4j-slider-css-input:focus::-webkit-slider-thumb {
   background-color: rgb(var(--theme-palette-primary-pressed-strong));
   box-shadow: 0 0 0 9px rgb(var(--theme-palette-primary-hover-weak));
 }
 
-input[type="range"].neo4j-slider-css-input::-webkit-slider-thumb:hover {
+input[type="range"]:not([disabled]).neo4j-slider-css-input::-webkit-slider-thumb:hover {
   box-shadow: 0 0 0 9px rgb(var(--theme-palette-primary-hover-weak));
 }
