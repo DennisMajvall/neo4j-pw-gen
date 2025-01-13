@@ -2,14 +2,15 @@ import { useState, useCallback } from "react";
 
 const DEFAULT_DURATION_MS = 2000;
 
+type TimeoutHandle = ReturnType<typeof setTimeout> | undefined;
+
 export const useCopyToClipboard = (
   duration = DEFAULT_DURATION_MS
 ): [boolean, (text: string) => void] => {
   const [displayIsCopiedToClipboard, setDisplayIsCopiedToClipboard] =
     useState(false);
-  const [timeoutHandle, setTimeoutHandle] = useState<
-    ReturnType<typeof setTimeout> | undefined
-  >(undefined);
+
+  const [timeoutHandle, setTimeoutHandle] = useState<TimeoutHandle>(undefined);
 
   const copyToClipboard = useCallback(
     (text: string) => {
@@ -20,19 +21,16 @@ export const useCopyToClipboard = (
           clearTimeout(timeoutHandle);
           setDisplayIsCopiedToClipboard(true);
 
-          const newTimeoutHandle = setTimeout(
-            () => setDisplayIsCopiedToClipboard(false),
-            duration
+          setTimeoutHandle(
+            setTimeout(() => setDisplayIsCopiedToClipboard(false), duration)
           );
-          setTimeoutHandle(newTimeoutHandle);
         },
         (err) => {
           console.error("Failed to copy text to clipboard: ", err);
         }
       );
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [duration]
+    [duration, timeoutHandle]
   );
 
   return [displayIsCopiedToClipboard, copyToClipboard];
