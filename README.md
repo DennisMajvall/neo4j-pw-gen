@@ -1,5 +1,17 @@
-- `yarn start` ([http://localhost:3000](http://localhost:3000))
-- `yarn test`
+- `pnpm start` ([http://localhost:3000](http://localhost:3000))
+- `pnpm test`
+
+## Changes since last
+
+I switched over to:
+
+- Vite
+- Vitest
+- ESLint 9 (e.g flat-config)
+
+Getting all of the configurations for this correct took ~3 hrs. The reason for this was that I read a lot of documentation & it was difficult to find solutions as ESLint 9 is VERY NEW, they changed their format entirely and most internet sources refer to the old way of doing it.
+
+# older info below
 
 ## Personal message
 
