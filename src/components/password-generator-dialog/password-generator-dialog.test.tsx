@@ -7,10 +7,6 @@ const mockCopyToClipboardFunc = vi
   .fn()
   .mockImplementation(() => Promise.resolve());
 
-// const mockGenerateRandomPassword = vi
-//   .fn()
-//   .mockImplementation(() => Promise.resolve());
-
 vi.mock("../../hooks/use-copy-to-clipboard", () => ({
   useCopyToClipboard: () => {
     return [true, mockCopyToClipboardFunc];
