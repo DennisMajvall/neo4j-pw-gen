@@ -3,6 +3,8 @@
 
 ## Changes since last
 
+I had no idea what areas you'd like me to focus on in this so I did a little bit of everything, the primary areas I saw improvement could be made in. I hope it's enough now and if you have any questions I look forward to discussing them.
+
 I switched over to:
 
 - Vite
@@ -10,6 +12,16 @@ I switched over to:
 - ESLint 9 (e.g flat-config)
 
 Getting all of the configurations for this correct took ~3 hrs. The reason for this was that I read a lot of documentation & it was difficult to find solutions as ESLint 9 is VERY NEW, they changed their format entirely and most internet sources refer to the old way of doing it.
+
+Re-wrote the entire Slider from scratch (several hours), the new version doesn't use the native input type="range" as it was incredibly difficult to fine tweak, for example you can't add a ::before to the slider-thumb making the hover effect hard.
+
+Since the Figma design only showed a static picture in the normal state I tried to make my slider look like the one you have in Storybook in regards to the other states.
+
+It was difficult to get the slider's user-select right. With the help of internet I finally found the solution which was the ("invisible") inner span found in `slider-thumb.tsx`. Before fixing it - dragging the slider would perform text-selections on the checkbox labels and other elements.
+
+Fixed a small bug with the password-generation where the random replcement of including characters had the risk of overwriting each other, no longer guaranteeing that all of the includes were added.
+
+Wrote a couple of tests, there can always be more of course but the ones I wrote test a few different things in the UI & code. No e2e or GH Action/Pipeline coding done "yet".
 
 # older info below
 
