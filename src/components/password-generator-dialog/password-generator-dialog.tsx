@@ -3,7 +3,7 @@ import { SliderWithLabel } from "../slider/slider-with-label";
 import { useCallback, useState } from "react";
 import {
   generateRandomPassword,
-  DEFAULT_LENGTH,
+  DEFAULT_PASSWORD_LENGTH,
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH,
 } from "../../services/password-generator";
@@ -21,7 +21,7 @@ export function PasswordGeneratorDialog() {
   const [includeUpperCase, setIncludeUpperCase] = useState(false);
   const [includeLowerCase, setIncludeLowerCase] = useState(false);
   const [includeSymbols, setIncludeSymbols] = useState(false);
-  const [length, setLength] = useState(DEFAULT_LENGTH);
+  const [length, setLength] = useState(DEFAULT_PASSWORD_LENGTH);
 
   const onGenerateClick = useCallback(() => {
     const newPassword = generateRandomPassword({
@@ -50,11 +50,12 @@ export function PasswordGeneratorDialog() {
           id="pw-character-length"
           max={MAX_PASSWORD_LENGTH}
           min={MIN_PASSWORD_LENGTH}
-          defaultValue={DEFAULT_LENGTH}
-          onChange={(newValue) => setLength(newValue)}
-          step={1}
-          text="Password length"
+          defaultValue={DEFAULT_PASSWORD_LENGTH}
+          onChange={setLength}
+          step={4} // Change or comment me out!
+          text="Character length"
           displayCurrentValue
+          // isDisabled // Change me!
         />
 
         <div className="n-gap-y-3 n-flex n-flex-col n-p-3 n-pt-0">

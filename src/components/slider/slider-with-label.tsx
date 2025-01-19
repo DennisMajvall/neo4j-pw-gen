@@ -13,20 +13,29 @@ export function SliderWithLabel(props: Props) {
     props.defaultValue ?? props.min
   );
 
-  const onChange = (newValue: number, previousValue: number) => {
+  const onChange = (newValue: number) => {
     setCurrentValue(newValue);
-    props.onChange?.(newValue, previousValue);
+    props.onChange?.(newValue);
   };
 
   return (
-    <div className="n-flex n-flex-col">
+    <div className="n-flex n-flex-col n-gap-6">
       <div className="n-flex n-justify-between">
-        <label htmlFor={sliderProps.id} className="n-subheading-medium">
+        <label
+          id={`${sliderProps.id}__label`}
+          htmlFor={sliderProps.id}
+          className="n-subheading-medium"
+        >
           {text}
         </label>
 
         {displayCurrentValue && (
-          <p className="n-subheading-medium">{currentValue}</p>
+          <p
+            id={`${sliderProps.id}__label_value`}
+            className="n-subheading-medium"
+          >
+            {currentValue}
+          </p>
         )}
       </div>
 
