@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { KeyboardEvent, MouseEvent, TouchEvent } from "react";
 import { clamp, roundToMaxDecimals } from "../../utils";
+import { SliderThumb } from "./slider-thumb";
 
 const MAX_DECIMALS = 2;
 const FALLBACK_NUM_STEPS = 10;
@@ -123,7 +124,7 @@ export function Slider({
 
   const valueAsPercentage = ((currentValue - min) / (max - min)) * 100;
 
-  // Turn all bg-colors gray if disabled
+  // Turn all bg-colors (identical) gray if disabled
   const disabledBgColor = isDisabled ? "n-bg-neutral-text-weakest" : "";
 
   return (
@@ -159,50 +160,12 @@ export function Slider({
           width: `${valueAsPercentage}%`,
         }}
       >
-        <span
-          tabIndex={isDisabled ? undefined : 0}
+        <SliderThumb
+          disabledBgColor={disabledBgColor}
+          isDragging={isDragging}
           onKeyDown={onKeyDown}
-          className={clsx(
-            "n-absolute",
-            "n-top-1/2",
-            "n--translate-y-1/2",
-            "-n-right-2",
-            "n-w-4",
-            "n-h-4",
-            "n-rounded-[50%]",
-            disabledBgColor || "n-bg-primary-bg-strong",
-            "before:n-content-['']",
-            "before:n-absolute",
-            "before:n-top-1/2",
-            "before:n-left-1/2",
-            "before:n--translate-x-1/2",
-            "before:n--translate-y-1/2",
-            "before:n-w-9",
-            "before:n-h-9",
-            "before:n-rounded-full",
-            "before:n-z-[-1]",
-            !isDisabled && [
-              "focus:n-outline",
-              "focus:n-outline-2",
-              "focus:n-outline-palette-primary-focus",
-              "focus:n-bg-primary-pressed-strong",
-              "before:focus:n-bg-primary-hover-weak",
-              "before:hover:n-bg-primary-hover-weak",
-              "before:active:n-bg-primary-pressed-weak",
-              isDragging ? "n-cursor-grabbing" : "n-cursor-grab",
-            ]
-          )}
-        >
-          <span
-            className={clsx(
-              "n-absolute",
-              "n-select-none",
-              "n-overflow-hidden",
-              "n-h-[1px]",
-              "n-whitespace-nowrap"
-            )}
-          ></span>
-        </span>
+          isDisabled={isDisabled}
+        />
       </div>
     </div>
   );
