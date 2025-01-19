@@ -29,17 +29,6 @@ export const generateRandomPassword = ({
     ...(includeSymbols ? SYMBOLS : ""),
   ].join("");
 
-  const length = Math.max(
-    MIN_PASSWORD_LENGTH,
-    Math.min(MAX_PASSWORD_LENGTH, lengthProp)
-  );
-
-  let password = "";
-
-  for (let i = 0; i < length; ++i) {
-    password += getRandomCharInString(possibleCharacters);
-  }
-
   /**
    * Not sure if this is a requirement but nowhere in the assignment
    * is it mentioned that the password should be random.
@@ -53,29 +42,45 @@ export const generateRandomPassword = ({
    *
    * PS. If this is not the case the automatic tests need to be modified.
    * */
-  const replaceOneWith = (replacementValues: string) => {
-    password = getWithRandomlyReplacedChar(
-      password,
-      getRandomCharInString(replacementValues)
-    );
-  };
-  if (includeUpperCase) replaceOneWith(UPPER_CASE_LETTERS);
-  if (includeLowerCase) replaceOneWith(LOWER_CASE_LETTERS);
-  if (includeSymbols) replaceOneWith(SYMBOLS);
+  const replacementValues = [
+    ...(includeUpperCase ? getRandomCharInString(UPPER_CASE_LETTERS) : ""),
+    ...(includeLowerCase ? getRandomCharInString(LOWER_CASE_LETTERS) : ""),
+    ...(includeSymbols ? getRandomCharInString(SYMBOLS) : ""),
+  ].join("");
+
+  const length = Math.max(
+    Math.max(MIN_PASSWORD_LENGTH, Math.min(MAX_PASSWORD_LENGTH, lengthProp)),
+    replacementValues.length
+  );
+
+  // Place the replacement values at the start of the password
+  let password = replacementValues;
+
+  // Fill up the rest of the array with random characters
+  for (let i = 0; i < length - replacementValues.length; ++i) {
+    password += getRandomCharInString(possibleCharacters);
+  }
+
+  // Move the replacement values to random positions in the password
+  for (let i = 0; i < replacementValues.length; ++i) {
+    password = swapRandomCharInString(password, i, replacementValues[i]);
+  }
 
   return password;
 };
 
-const getWithRandomlyReplacedChar = (
-  input: string,
-  validReplacementValues: string
-) => {
-  const randomIndex = Math.floor(Math.random() * input.length);
-  const randomReplacementValue = getRandomCharInString(validReplacementValues);
-  const inputAsArr = [...input];
-  inputAsArr.splice(randomIndex, 1, randomReplacementValue);
-  const result = inputAsArr.join("");
-  return result;
+const swapRandomCharInString = (
+  str: string,
+  index: number,
+  replacement: string
+): string => {
+  const randomIndex = Math.floor(Math.random() * str.length);
+  const temp = str[randomIndex];
+  const result = str.split("");
+
+  result.splice(randomIndex, 1, replacement);
+  result.splice(index, 1, temp);
+  return result.join("");
 };
 
 const getRandomCharInString = (arr: string) => {

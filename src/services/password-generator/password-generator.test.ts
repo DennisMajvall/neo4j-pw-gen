@@ -77,14 +77,31 @@ test("generatePassword does not include symbols", () => {
 });
 
 test("generatePassword has correct length", () => {
+  // When using includes the minimum length is the number of includes
+  // Even if the constant MIN_PASSWORD_LENGTH is lower
+  // Alternatively one could write a compile-time test to assert this instead (min 3 if 3 includes are possible)
+  const props = {
+    includeUpperCase: true,
+    includeLowerCase: true,
+    includeSymbols: true,
+  };
+
+  const numPropsWithTrue = Object.entries(props).reduce<number>(
+    (acc, [_key, val]) => (val ? acc + 1 : acc),
+    0
+  );
+
   for (let i = 0; i < 100; i++) {
     const password = generateRandomPassword({
       length: i,
-      includeUpperCase: true,
-      includeLowerCase: true,
-      includeSymbols: true,
+      ...props,
     });
-    const minLength = Math.max(MIN_PASSWORD_LENGTH, i);
+
+    const minLength = Math.max(
+      Math.max(numPropsWithTrue, MIN_PASSWORD_LENGTH),
+      i
+    );
+
     const allowedLength = Math.min(MAX_PASSWORD_LENGTH, minLength);
     expect(password.length).toBe(allowedLength);
   }
