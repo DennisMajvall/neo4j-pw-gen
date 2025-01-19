@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { KeyboardEvent, MouseEvent, TouchEvent } from "react";
+import { useEffect, useReducer, useRef, KeyboardEvent } from "react";
 import { clamp, roundToMaxDecimals } from "../../utils";
 import { SliderThumb } from "./slider-thumb";
+import { useSliderMouseEvents } from "./use-slider-mouse-events";
 
 const MAX_DECIMALS = 2;
 const FALLBACK_NUM_STEPS = 10;
@@ -42,6 +42,17 @@ export function Slider({
 
   const sliderRef = useRef<HTMLDivElement>(null);
 
+  /** Review note due to unorthodox use of "useReducer":
+   *
+   * Most people only use "useReducer" to dispatch actions because this is
+   * what redux & the documentation taught them in their examples.
+   *
+   * However, useReducer is simply: a "useState" with a manually written "setter"-function.
+   * Another way to view it as the Class/Function syntax "set": https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_classes#accessor_fields
+   *
+   * This allows us to handle clamping, rounding and disabling in a single place
+   * so that "the value" never becomes invalid.
+   */
   const [currentValue, setCurrentValue] = useReducer(
     (prevValue: number, newValue: number) => {
       return isDisabled
@@ -50,77 +61,22 @@ export function Slider({
     },
     defaultValue
   );
-  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => onChange(currentValue), [currentValue]);
 
-  const moveSliderPosition = useCallback(
-    (event: MouseEvent | TouchEvent) => {
-      if (isDisabled || !sliderRef.current) return;
-
-      const sliderRect = sliderRef.current.getBoundingClientRect();
-      const offsetX =
-        (event as MouseEvent).clientX ??
-        (event as TouchEvent).touches[0].clientX;
-
-      const percentageOfSliderWidth =
-        (offsetX - sliderRect.left) / sliderRect.width;
-
-      // Without "steps" this would have been much easier:
-      // const newValue = Math.round(percentageOfSliderWidth * (max - min) + min);
-
-      // Calculate the value using "steps"
-      const numStepsDisregardingMinMax = (percentageOfSliderWidth * 100) / step;
-      const numSteps = numStepsDisregardingMinMax / (100 / (max - min));
-      const numStepsRounded = Math.round(numSteps);
-      const newValue = min + numStepsRounded * step;
-
-      setCurrentValue(newValue);
-    },
-    [max, min]
-  );
+  const { onMouseDown, isDragging } = useSliderMouseEvents({
+    setCurrentValue,
+    min,
+    max,
+    step,
+    isDisabled,
+    sliderRef,
+  });
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.key === "ArrowLeft") setCurrentValue(currentValue - step);
     else if (event.key === "ArrowRight") setCurrentValue(currentValue + step);
   };
-
-  const onMouseDown = (event: MouseEvent | TouchEvent) => {
-    moveSliderPosition(event);
-    setIsDragging(true);
-  };
-
-  const onMouseMove = useCallback(
-    (event: Event) => {
-      if (isDragging)
-        moveSliderPosition(event as unknown as MouseEvent | TouchEvent);
-    },
-    [isDragging, moveSliderPosition]
-  );
-
-  const onMouseUp = useCallback(() => setIsDragging(false), []);
-
-  useEffect(() => {
-    // Re-using the same onMouseEvents for touch as the actions are the same.
-    if (isDragging) {
-      window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("mouseup", onMouseUp);
-      window.addEventListener("touchmove", onMouseMove, {
-        // Remove delay for touchmove in some browsers
-        // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#using_passive_listeners
-        // https://developer.chrome.com/docs/lighthouse/best-practices/uses-passive-event-listeners
-        passive: true,
-      });
-      window.addEventListener("touchend", onMouseUp);
-    }
-
-    return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
-      window.removeEventListener("touchmove", onMouseMove);
-      window.removeEventListener("touchend", onMouseUp);
-    };
-  }, [isDragging, onMouseMove, onMouseUp]);
 
   const valueAsPercentage = ((currentValue - min) / (max - min)) * 100;
 
