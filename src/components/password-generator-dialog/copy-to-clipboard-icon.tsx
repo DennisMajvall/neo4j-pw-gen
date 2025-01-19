@@ -6,7 +6,7 @@ import { useCopyToClipboard } from "../../hooks/use-copy-to-clipboard";
 export function CopyToClipboardIcon({ password }: { password: string }) {
   const [displayIsCopiedToClipboard, copyToClipboard] = useCopyToClipboard();
 
-  if (!navigator.clipboard) return null;
+  // if (!navigator.clipboard) return null;
 
   return (
     <Tooltip
@@ -16,6 +16,7 @@ export function CopyToClipboardIcon({ password }: { password: string }) {
     >
       <Tooltip.Trigger hasButtonWrapper>
         <IconButton
+          data-testid="copy-to-clipboard-button"
           ariaLabel="Copy to clipboard"
           onClick={() => copyToClipboard(password)}
           isClean

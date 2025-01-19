@@ -22,7 +22,11 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    setupFiles: "configs/vitest.setup.ts",
     pool: "threads",
+    testTimeout: 100,
+    hookTimeout: 100,
+    teardownTimeout: 100,
     poolOptions: {
       threads: {
         useAtomics: true,

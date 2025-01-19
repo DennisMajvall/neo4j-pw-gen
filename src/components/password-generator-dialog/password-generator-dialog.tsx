@@ -39,6 +39,7 @@ export function PasswordGeneratorDialog() {
 
       <div className="n-gap-y-6 n-flex n-flex-col">
         <TextInput
+          htmlAttributes={{ "data-testid": "generated-password" }}
           label="Generated password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -60,6 +61,7 @@ export function PasswordGeneratorDialog() {
 
         <div className="n-gap-y-3 n-flex n-flex-col n-p-3 n-pt-0">
           <Checkbox
+            htmlAttributes={{ "data-testid": "include-upper-case-checkbox" }}
             label="Include Uppercase Letters"
             isChecked={includeUpperCase}
             onChange={(v) => setIncludeUpperCase(v.target.checked)}
@@ -76,7 +78,12 @@ export function PasswordGeneratorDialog() {
           />
         </div>
 
-        <Button onClick={onGenerateClick}>Generate</Button>
+        <Button
+          htmlAttributes={{ "data-testid": "generate-password-button" }}
+          onClick={onGenerateClick}
+        >
+          Generate
+        </Button>
       </div>
     </Dialog>
   );
